@@ -1,0 +1,51 @@
+.review {
+	position: relative;
+	border: 1px solid #EEE;
+	border-radius: 5px;
+	border-radius: 5px;
+	padding: 15px;
+	display: block;
+	width: 100%;
+	height: auto;
+	margin-bottom: 15px;
+}
+
+.review .description {
+	margin-bottom: 20px;
+}
+
+.review .content {
+	float: left;
+	width: calc(100% - 105px);
+}
+
+.review .average {
+	font-size: 2em;
+	margin-right: 15px;
+	width: 80px;
+	height: 100%;
+	float: left;
+	text-align: center;
+	padding: 10px;
+}
+
+.review .grades {
+	float: left;
+	width: calc(33.33% - 50px);
+	margin-right: 50px;
+}
+
+.review .grades table {
+	border: none;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.review .grades tr, .review .grades td {
+	border: none;
+}
+
+.review .grades tr td:nth-child(even) {
+	font-weight: 700;
+	padding-left: 40px;
+}
