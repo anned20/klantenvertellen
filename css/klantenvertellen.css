@@ -1,4 +1,4 @@
-.review {
+.summary, .review {
 	position: relative;
 	border: 1px solid #EEE;
 	border-radius: 5px;
@@ -15,24 +15,25 @@
 }
 
 .review .content {
-	float: left;
-	width: calc(100% - 105px);
+	width: 100%;
+}
+
+.review .stars {
+	text-align: center;
+	font-size: 1.6em;
+	color: #FFD700;
+	margin-bottom: 10px;
 }
 
 .review .average {
 	font-size: 2em;
-	margin-right: 15px;
-	width: 80px;
-	height: 100%;
-	float: left;
+	width: 100%;
 	text-align: center;
 	padding: 10px;
 }
 
 .review .grades {
-	float: left;
-	width: calc(33.33% - 50px);
-	margin-right: 50px;
+	width: 100%;
 }
 
 .review .grades table {
@@ -48,4 +49,99 @@
 .review .grades tr td:nth-child(even) {
 	font-weight: 700;
 	padding-left: 40px;
+}
+
+.review hr {
+	height: 1px;
+	color: #DDD;
+	background-color: #DDD;
+	border: none;
+}
+
+.summary .grade {
+	float: left;
+	width: 200px;
+	height: 194px;
+	background: url(../img/klantenvertellen.png) no-repeat left top;
+	padding: 80px 0 0 68px;
+	font-size: 3.8em;
+	margin-left: 63px;
+}
+
+.summary .description {
+	float: left;
+	width: calc(100% - 320px);
+}
+
+.summary .description table {
+	border: none;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.summary .description tr, .summary .description td {
+	border: none;
+}
+
+.center {
+	text-align: center;
+}
+
+.pagination {
+    display: inline-block;
+	text-align: center;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+	border: 1px solid #ddd;
+	transition: background-color .3s;
+}
+
+.pagination a:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.pagination a:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+@media (min-width: 768px) {
+	.review .content {
+		float: left;
+		width: calc(100% - 105px);
+	}
+
+	.review .grades {
+		float: left;
+		width: calc(33.33% - 50px);
+		margin-right: 50px;
+	}
+
+	.review .average {
+		margin-right: 15px;
+		width: 80px;
+		height: 100%;
+		float: left;
+	}
+
+	.review .stars {
+		text-align: left;
+	}
+
+	.hidden-sm-up {
+		display: none;
+	}
 }

@@ -62,10 +62,32 @@ class KlantenVertellenOptions
 			"klantenvertellen-options",
 			"general_section"
 		);
+		add_settings_field(
+			"klantenvertellen_perpage",
+			"Reviews per pagina",
+			[$this, "klantenvertellen_perpage_element"],
+			"klantenvertellen-options",
+			"general_section"
+		);
+		add_settings_field(
+			"klantenvertellen_paginationoffset",
+			"Paginatie offset",
+			[$this, "klantenvertellen_paginationoffset_element"],
+			"klantenvertellen-options",
+			"general_section"
+		);
 
 		register_setting(
 			"klantenvertellen_settings",
 			"klantenvertellen_xml_url"
+		);
+		register_setting(
+			"klantenvertellen_settings",
+			"klantenvertellen_perpage"
+		);
+		register_setting(
+			"klantenvertellen_settings",
+			"klantenvertellen_paginationoffset"
 		);
 	}
 
@@ -75,6 +97,24 @@ class KlantenVertellenOptions
 	public function klantenvertellen_xml_url_element() {
 	?>
 		<input type="text" name="klantenvertellen_xml_url" id="klantenvertellen_xml_url" value="<?php echo get_option("klantenvertellen_xml_url"); ?>" />
+	<?php
+	}
+
+	/*
+	 * PerPage element
+	 */
+	public function klantenvertellen_perpage_element() {
+	?>
+		<input type="number" name="klantenvertellen_perpage" id="klantenvertellen_perpage" value="<?php echo get_option("klantenvertellen_perpage", 10); ?>" />
+	<?php
+	}
+
+	/*
+	 * PerPage element
+	 */
+	public function klantenvertellen_paginationoffset_element() {
+	?>
+		<input type="number" name="klantenvertellen_paginationoffset" id="klantenvertellen_paginationoffset" value="<?php echo get_option("klantenvertellen_paginationoffset", 5); ?>" />
 	<?php
 	}
 }

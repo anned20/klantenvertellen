@@ -28,115 +28,70 @@ class Klantenvertellen
 		add_shortcode('KlantenVertellenRating', [&$this, 'klantenvertellen_rating_shortcode']);
 	}
 
-	public function klantenvertellen_shortcode($atts = [], $content = null, $tag = '')
+	public function klantenvertellen_shortcode()
 	{
 		if (get_option('klantenvertellen_xml_url') == '') {
-			die('Geen XML url ingevuld in de instellingen.');
+			echo('Geen XML url ingevuld in de instellingen.');
+
+			return;
 		}
 
 		// Get data from klantenvertellen
 		$data = $this->getFromUrl(get_option('klantenvertellen_xml_url'));
 
-		$output = '';
+		$reviews = $data['beoordelingen']['beoordeling'];
 
-		$output .= <<<EOD
-<div class="summary">
-	<p>Hoi</p>
-</div>
-EOD;
+		$currentPage = isset($_GET['pag']) ? $_GET['pag'] : 1;
+		$perPage = get_option('klantenvertellen_perpage', 10);
 
-		foreach ($data->beoordelingen->beoordeling as $review) {
-			if (!empty((string) $review->woonplaats)) {
-				$review->woonplaats = ' uit '.$review->woonplaats;
+		$reviews = array_splice($reviews, (($currentPage - 1) * $perPage), $perPage);
+
+		$reviews = array_map(function($review) {
+			foreach ($review as &$value) {
+				if (is_array($value)) {
+					$value = null;
+				}
+			}
+			
+			if (!empty((string) $review['woonplaats'])) {
+				$review['woonplaats'] = ' uit '.$review['woonplaats'];
 			}
 
-			if ((string) $review->voornaam === 'Dhr./mevr.') {
-				$review->voornaam = 'Anoniem';
-				$review->achternaam = '';
+			if ((string) $review['voornaam'] === 'Dhr./mevr.') {
+				$review['voornaam'] = 'Anoniem';
+				$review['achternaam'] = '';
 			}
 
-			if (!empty((string) $review->beschrijving)) {
-				$review->beschrijving = "Ervaring: ".$review->beschrijving;
+			if (!empty((string) $review['beschrijving'])) {
+				$review['beschrijving'] = "Ervaring: ".$review['beschrijving'];
 			}
 
-			$review->aanbeveling = ucwords($review->aanbeveling);
+			$review['aanbeveling'] = ucwords($review['aanbeveling']);
 
-			$stars = str_replace(',', '.', $review->gemiddelde) / 2;
+			$stars = str_replace(',', '.', $review['gemiddelde']) / 2;
 
-			$starHtml = '';
+			$review['starHtml'] = '';
 
 			for($x = 0; $x < 5; $x++) {
 				if(floor($stars) - $x >= 1) {
-					$starHtml .= '<i class="fa fa-star"></i>'; 
+					$review['starHtml'] .= '<i class="fa fa-star"></i>'; 
 				} elseif($starNumber - $x > 0) { 
-					$starHtml .= '<i class="fa fa-star-half-o"></i>'; 
+					$review['starHtml'] .= '<i class="fa fa-star-half-o"></i>'; 
 				} else {
-					$starHtml .= '<i class="fa fa-star-o"></i>';
+					$review['starHtml'] .= '<i class="fa fa-star-o"></i>';
 				}
 			}
 
-			$output .= <<<EOD
-<div class="review">
-	<div class="average">
-		<span>$review->gemiddelde</span>
-	</div>
-	<div class="content">
-		<span>$starHtml</span>
-		<div class="name">
-			<b><span itemprop="author">$review->voornaam $review->achternaam</span> $review->woonplaats</b>
-		</div>
-		<div class="reason">
-			Reden: $review->redenbezoek
-		</div>
-		<div class="description">
-			$review->beschrijving
-		</div>
-		<div class="clearfix"></div>
-		<div class="grades">
-			<table>
-				<tbody>
-					<tr>
-						<td>Service</td>
-						<td>$review->service</td>
-					</tr>
-					<tr>
-						<td>Deskundigheid</td>
-						<td>$review->deskundigheid</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="grades">
-			<table>
-				<tbody>
-					<tr>
-						<td>Prijs / Kwaliteit</td>
-						<td>$review->prijskwaliteit</td>
-					</tr>
-					<tr>
-						<td>Totaal</td>
-						<td>$review->gemiddelde</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="grades">
-			<table>
-				<tbody>
-					<tr>
-						<td>Aanbeveling?</td>
-						<td>$review->aanbeveling</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="clearfix"></div>
-</div>
-EOD;
-		}
+			return $review;
+		}, $reviews);
 
-		return $output;
+		$reviewCount = count($data['beoordelingen']['beoordeling']);
+		$maxPage = ceil($reviewCount / $perPage);
+		$previousPage = ($currentPage <= 1) ? 1 : ($currentPage - 1);
+		$nextPage = ($currentPage >= $maxPage) ? $maxPage : ($currentPage + 1);
+		$paginationOffset = get_option('klantenvertellen_paginationoffset', 5);
+
+		require plugin_dir_path(__FILE__)."klantenvertellen_list.php";
 	}
 
 	/**
@@ -146,6 +101,12 @@ EOD;
 	 */
 	public function klantenvertellen_rating_shortcode()
 	{
+		if (get_option('klantenvertellen_xml_url') == '') {
+			echo('Geen XML url ingevuld in de instellingen.');
+
+			return;
+		}
+
 		$data = $this->getFromUrl(get_option('klantenvertellen_xml_url'));
 
 		$ratingSnippet = <<<EOD
@@ -153,8 +114,8 @@ EOD;
 	<span itemscope itemtype="http://schema.org/WebPage">
 		<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
 			Beoordeling door klanten:
-			<span itemprop="ratingValue">{$data->totaal->gemiddelde}</span>/<span itemprop="bestRating">10</span>
-			<span> van de <span itemprop="ratingCount">{$data->statistieken->aantalingevuld}</span> beoordelingen</span>
+			<span itemprop="ratingValue">{$data['totaal']['gemiddelde']}</span>/<span itemprop="bestRating">10</span>
+			<span> van de <span itemprop="ratingCount">{$data['statistieken']['aantalingevuld']}</span> beoordelingen</span>
 		</span>
 	</span>
 </div>
@@ -178,10 +139,20 @@ EOD;
 	 */
 	private function getFromUrl($url)
 	{
-		return simplexml_load_file($url);
+		$xml = file_get_contents($url);
+
+		$string = preg_replace_callback('/<!\[CDATA\[(.*)\]\]>/', function($matches) {
+			$converted = htmlspecialchars($matches[1]);
+			$trimmed = trim($converted);
+			return $trimmed;
+		}, $xml);
+
+		return json_decode(json_encode(simplexml_load_string($string)), true);
 	}
-	
 }
 
-new KlantenVertellenOptions();
+if (is_admin()) {
+	new KlantenVertellenOptions();
+}
+
 new KlantenVertellen();
