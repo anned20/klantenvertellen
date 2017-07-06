@@ -63,6 +63,20 @@ class KlantenVertellenOptions
 			"general_section"
 		);
 		add_settings_field(
+			"klantenvertellen_review_url",
+			"Klantenvertellen review url",
+			[$this, "klantenvertellen_review_url_element"],
+			"klantenvertellen-options",
+			"general_section"
+		);
+		add_settings_field(
+			"klantenvertellen_intro",
+			"Klantenvertellen intro",
+			[$this, "klantenvertellen_intro_element"],
+			"klantenvertellen-options",
+			"general_section"
+		);
+		add_settings_field(
 			"klantenvertellen_perpage",
 			"Reviews per pagina",
 			[$this, "klantenvertellen_perpage_element"],
@@ -83,6 +97,14 @@ class KlantenVertellenOptions
 		);
 		register_setting(
 			"klantenvertellen_settings",
+			"klantenvertellen_review_url"
+		);
+		register_setting(
+			"klantenvertellen_settings",
+			"klantenvertellen_intro"
+		);
+		register_setting(
+			"klantenvertellen_settings",
 			"klantenvertellen_perpage"
 		);
 		register_setting(
@@ -97,6 +119,24 @@ class KlantenVertellenOptions
 	public function klantenvertellen_xml_url_element() {
 	?>
 		<input type="text" name="klantenvertellen_xml_url" id="klantenvertellen_xml_url" value="<?php echo get_option("klantenvertellen_xml_url"); ?>" />
+	<?php
+	}
+
+	/*
+	 * Review URL element
+	 */
+	public function klantenvertellen_review_url_element() {
+	?>
+		<input type="text" name="klantenvertellen_review_url" id="klantenvertellen_review_url" value="<?php echo get_option("klantenvertellen_review_url"); ?>" />
+	<?php
+	}
+
+	/*
+	 * Intro element
+	 */
+	public function klantenvertellen_intro_element() {
+	?>
+		<textarea name="klantenvertellen_intro" id="klantenvertellen_intro"><?php echo get_option("klantenvertellen_intro"); ?></textarea>
 	<?php
 	}
 

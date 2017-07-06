@@ -39,6 +39,12 @@ class Klantenvertellen
 		// Get data from klantenvertellen
 		$data = $this->getFromUrl(get_option('klantenvertellen_xml_url'));
 
+		$averageServiceGrade      = $data['totaal']['service'];
+		$averageKnowledgeGrade    = $data['totaal']['deskundigheid'];
+		$averagePriceQualityGrade = $data['totaal']['prijskwaliteit'];
+		$averageTotalGrade        = $data['totaal']['gemiddelde'];
+		$recommendedPercentage    = $data['statistieken']['aanbevolen'];
+
 		$reviews = $data['beoordelingen']['beoordeling'];
 
 		$currentPage = isset($_GET['pag']) ? $_GET['pag'] : 1;

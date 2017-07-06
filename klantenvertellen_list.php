@@ -1,10 +1,30 @@
 <div class="summary">
-	<div class="grade">
-		8,0
+	<div class="intro hidden-sm-down">
+		<p><?=get_option('klantenvertellen_intro', 'Intro')?></p>
+		<a href="<?=get_option('klantenvertellen_review_url')?>" target="_blank">Schrijf een review</a>
 	</div>
-	<div class="description">
+	<div class="details">
+		<div class="grade">
+			<?=$averageTotalGrade?>
+		</div>
+		<div class="description">
+			<ul>
+				<li><b>Klantvriendelijkheid:</b> <?=$averageServiceGrade?></li>
+				<li><b>Deskundigheid:</b> <?=$averageKnowledgeGrade?></li>
+				<li><b>Prijs-kwaliteit:</b> <?=$averagePriceQualityGrade?></li>
+			</ul>
+			<ul>
+				<li><b><?=$recommendedPercentage?> beveelt ons aan</b></li>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
 	</div>
 	<div class="clearfix"></div>
+	<hr class="hidden-sm-up">
+	<div class="intro hidden-sm-up">
+		<p><?=get_option('klantenvertellen_intro', 'Intro')?></p>
+		<a href="<?=get_option('klantenvertellen_review_url')?>" target="_blank">Schrijf een review</a>
+	</div>
 </div>
 
 <?php foreach ($reviews as $review): ?>
